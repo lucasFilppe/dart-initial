@@ -39,8 +39,22 @@ void main() {
    Cachorro dog = Cachorro();
   dog.dormir(); // Herdado da classe Animal
   dog.latir();  // Método próprio
-}
 
+  //future, Async, e Awant
+  // Chamando a função assíncrona
+  print("Chamando o teste assíncrono...");
+  testarAssincronismo();
+  
+  print("Fim da execução do main.");
+  /**Um detalhe super importante sobre como isso vai rodar:
+Quando você rodar esse código, você vai notar algo interessante no seu terminal: 
+a frase "Fim da execução do main." vai ser impressa ANTES de "-> 
+Sucesso: Dados carregados com sucesso!".
+Como o seu main não é async e você não usou await ao chamar testarAssincronismo(), 
+o Dart inicia a busca de dados em segundo plano, mas continua executando o resto do código da função main imediatamente. 
+Isso é exatamente o que queremos quando não queremos que a tela do nosso aplicativo fique congelada esperando uma resposta da internet! */
+  
+}
 
 //quando criarmos classes lembre de uma analogia, ela é um objeto do mundo real
 class Celular {
@@ -126,3 +140,24 @@ Observação: no seu exemplo você usou implements. Em Dart, é mais comum usar
  implements quando você quer apenas obrigar a implementação de todos os
   métodos, como uma interface.
  */
+
+//future, Async, e Awant
+// 1. Criamos uma função separada e marcamos ELA como async.
+// Como ela não retorna nenhum valor para o main usar depois, o tipo é Future<void>
+Future<void> testarAssincronismo() async {
+  print("-> Iniciando busca de dados (em segundo plano)...");
+
+  try {
+    // O await agora é válido, pois está dentro de uma função async
+    String dadosUsuario = await buscarDadosDoUsuario();
+    print("-> Sucesso: $dadosUsuario");
+  } catch (erro) {
+    print("-> Falha na requisição: $erro");
+  }
+}
+
+// 2. A função que simula o tempo de espera do servidor
+Future<String> buscarDadosDoUsuario() async {
+  await Future.delayed(Duration(seconds: 3));
+  return "Dados carregados com sucesso!";
+}
